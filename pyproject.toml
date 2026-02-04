@@ -1,0 +1,17 @@
+[build-system]
+requires = ["uv_build >= 0.9.28, <0.10.0"]
+build-backend = "uv_build"
+
+[project]
+name = "pyTodo"
+version = "0.1.0"
+description = "This is a nice todo tool for easily noting down important tasks."
+keywords = ["todo", "todo list", "cli tool"]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+  "click",
+]
+
+[project.scripts]
+todo = "pytodo.main:main"
