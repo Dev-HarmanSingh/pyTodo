@@ -37,7 +37,18 @@ def add_list(name):
         data[name.upper()] = []
     save_db(data)
     return
-    
+
+@todo.command()
+@click.option('--list','todolist', default="MISC", type=str)
+@click.argument('todo', type=str)
+def add_todo(todo:str, todolist:str,):
+    data = open_db()
+    new_todo = {
+        'item' : todo,
+        'done' : False,
+    }
+    data[todolist.upper()].append(new_todo)
+    save_db(data)
 
 
 
