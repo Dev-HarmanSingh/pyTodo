@@ -51,6 +51,72 @@ def add_todo(todo:str, todolist:str,):
     save_db(data)
 
 
+@todo.command()
+@click.option('--list', 'listname', default=None, type=str)
+def list_todos(listname):
+    data = open_db()
+
+    if not listname:
+        click.echo("\nTODOS\n")
+        for i, l in enumerate(data, start=1):
+            click.echo(f"{i}. {l}")
+        return
+    
+    click.echo(f"\n{listname.upper()}\n")
+    for i, todo in enumerate(data[listname.upper()], start=1):
+        click.echo(f"{i}.[{'x' if todo['done'] else ' '}]  {todo['item']}")
+    click.echo()
+    return
+
+@todo.command()
+@click.option('--list', 'listname', type=str)
+@click.option('--index', type=int)
+def complete(listname, index):
+    data = open_db()
+    try:
+        data[listname.upper()][index-1]['done'] = True
+    except:
+        click.echo("invalid command")
+    save_db(data)
+
+@todo.command()
+@click.option('--list', 'listname')
+def clear(listname):
+    data = open_db()
+    for todo in data[listname.upper()]:
+        if not todo['done']:
+            continue
+        data[listname.upper()].remove(todo)
+    save_db(data)
+    return
+
+@todo.command()
+@click.argument('listname')
+def rmlist(listname):
+    if listname.upper() == 'MISC' or listname.upper() == 'DAILY':
+        click.echo("You are not supposed to delete this todo")
+        return
+    data = open_db()
+    if listname.upper() not in data:
+        click.echo("There is no such list")
+        return
+    data.pop(listname.upper())
+    save_db(data)
+    return
+
+@todo.command()
+@click.option('--list', 'listname', type=str)
+@click.option('--index', type=int)
+def rmtodo(listname, index):
+    data = open_db()
+    todolist = data[listname.upper()]
+    try:
+        todolist_item = todolist[index-1]
+        todolist.remove(todolist_item)
+    except:
+        click.echo("invalid command")
+    save_db(data)
+    return
 
 def main():
     todo()
